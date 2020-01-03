@@ -3,29 +3,29 @@ use std::fs::File;
 use std::path::Path;
 
 pub struct FilePost {
-    name: &'static str,
-    path: Path,
+    name: String,
+    path: &'static Path,
     contents: String,
 }
 
 impl FilePost {
-    pub fn new(path: Path) -> Self {
+    pub fn new(path: &'static Path) -> Self {
         FilePost {
-            name: "",
-            path: "",
+            name: String::new(),
+            path: Path::new("./"),
             contents: String::new()
         }
-        .open( path )
+        .open( &path )
     }
 
-    pub fn open(&self, path: Path) -> Self {
-        let mut file_descriptor = File::open( path ).unwrap();
+    pub fn open(&self, path: &'static Path) -> Self {
+        let mut file_descriptor = File::open( &path ).unwrap();
         let mut contents = String::new();
         file_descriptor.read_to_string(&mut contents).unwrap();
-
+        let fname: String = self.get_name();
         FilePost {
-            name: "",
-            path: path,
+            name: fname,
+            path: &path,
             contents: contents
         }
     }
@@ -33,6 +33,7 @@ impl FilePost {
     fn get_name(&self) -> String {
         let name: String = String::new();
         let splitted = self.path.file_name().unwrap().to_str().unwrap();
-        
+        println!("name: {}", splitted.to_string());
+        splitted.to_string()  
     }
 }
