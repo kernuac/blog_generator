@@ -1,39 +1,38 @@
 use std::io::Read;
 use std::fs::File;
-use std::path::Path;
+use std::path::PathBuf;
 
 pub struct FilePost {
-    name: String,
-    path: &'static Path,
-    contents: String,
+    pub name: String,
+    pub path: PathBuf,
+    pub contents: String,
 }
 
 impl FilePost {
-    pub fn new(path: &'static Path) -> Self {
+    pub fn new(path: PathBuf) -> Self {
         FilePost {
             name: String::new(),
-            path: Path::new("./"),
+            path: PathBuf::new(),
             contents: String::new()
         }
-        .open( &path )
+        .open( path )
     }
 
-    pub fn open(&self, path: &'static Path) -> Self {
+    pub fn open(&self, path: PathBuf) -> Self {
         let mut file_descriptor = File::open( &path ).unwrap();
         let mut contents = String::new();
         file_descriptor.read_to_string(&mut contents).unwrap();
-        let fname: String = self.get_name();
+        let fname: String = self.get_name( path.clone() );
+        
         FilePost {
             name: fname,
-            path: &path,
+            path: path,
             contents: contents
         }
     }
 
-    fn get_name(&self) -> String {
-        let name: String = String::new();
-        let splitted = self.path.file_name().unwrap().to_str().unwrap();
-        println!("name: {}", splitted.to_string());
-        splitted.to_string()  
+    fn get_name(&self, path: PathBuf ) -> String {
+         let file_name = path.file_name().unwrap();
+         file_name.to_str().unwrap().to_string()
     }
 }
