@@ -1,19 +1,23 @@
-const POSTS_FOLDER: &str =  "__posts";
+const POSTS_FOLDER: &str = "__posts";
 
+pub mod file_walker;
 pub mod metadata;
 pub mod posts;
-pub mod file_walker;
 
-use std::path::PathBuf;
+use std::fs;
 
 fn main() {
-    let _pt = posts::Post::new( format!("{}{}", POSTS_FOLDER, "/2019-12-11-Hello-World.md"));
-    // println!("author: {}\ntitle: {}\nurl: {}\n", pt.metadata.author, pt.metadata.title, pt.url );
-    let fln = file_walker::FilePost::new(
-        PathBuf::from(
-            format!("{}{}", POSTS_FOLDER, "/2019-12-11-Hello-World.md")
-        )
-    );
+    let files = fs::read_dir(POSTS_FOLDER).unwrap();
 
-    println!("filename: {}\npath: {}\ncontents: {}\n", fln.name, fln.path.to_string_lossy(), fln.contents);
+    for file in files {
+        let file = file.unwrap();
+        let fln = file_walker::FilePost::new(file.path());
+
+        println!(
+            "filename: {}\npath: {}\ncontents: {}\n",
+            fln.name,
+            fln.path.to_string_lossy(),
+            fln.contents
+        );
+    }
 }

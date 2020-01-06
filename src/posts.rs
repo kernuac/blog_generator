@@ -1,23 +1,22 @@
-use comrak::{markdown_to_html, ComrakOptions};
-use std::io::Read;
-use std::fs::File;
 use crate::metadata;
+use comrak::{markdown_to_html, ComrakOptions};
+use std::fs::File;
+use std::io::Read;
 
 pub struct Post {
     pub metadata: metadata::MetaData,
     pub filename: String,
     pub url: String,
-    pub contents: String
+    pub contents: String,
 }
 
 impl Post {
     pub fn new(filename: String) -> Post {
-
-        let mut pst: Post = Post{
+        let mut pst: Post = Post {
             filename: "".to_string(),
             metadata: metadata::MetaData::new(),
             url: "".to_string(),
-            contents: "".to_string()
+            contents: "".to_string(),
         };
 
         pst.filename = filename;
@@ -29,23 +28,25 @@ impl Post {
     }
 
     pub fn read_file(filename: String) -> String {
-        let mut file_descriptor = File::open( filename ).unwrap();
+        let mut file_descriptor = File::open(filename).unwrap();
         let mut content = String::new();
         file_descriptor.read_to_string(&mut content).unwrap();
         content
     }
 
     pub fn generate_url(&mut self) {
-        self.url = format!("/{}/{}/{}/{}.html", 
+        self.url = format!(
+            "/{}/{}/{}/{}.html",
             self.metadata.year,
             self.metadata.month,
             self.metadata.day,
-            self.filename.replace(".md", ""));
+            self.filename.replace(".md", "")
+        );
     }
 
     fn get_title_from_filename(self) -> String {
         let url: String = String::new();
-        
+
         url
     }
 }

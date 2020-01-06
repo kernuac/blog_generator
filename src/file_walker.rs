@@ -1,5 +1,5 @@
-use std::io::Read;
 use std::fs::File;
+use std::io::Read;
 use std::path::PathBuf;
 
 pub struct FilePost {
@@ -13,26 +13,26 @@ impl FilePost {
         FilePost {
             name: String::new(),
             path: PathBuf::new(),
-            contents: String::new()
+            contents: String::new(),
         }
-        .open( path )
+        .open(path)
     }
 
     pub fn open(&self, path: PathBuf) -> Self {
-        let mut file_descriptor = File::open( &path ).unwrap();
+        let mut file_descriptor = File::open(&path).unwrap();
         let mut contents = String::new();
         file_descriptor.read_to_string(&mut contents).unwrap();
-        let fname: String = self.get_name( path.clone() );
-        
+        let fname: String = self.get_name(path.clone());
+
         FilePost {
             name: fname,
             path: path,
-            contents: contents
+            contents: contents,
         }
     }
 
-    fn get_name(&self, path: PathBuf ) -> String {
-         let file_name = path.file_name().unwrap();
-         file_name.to_str().unwrap().to_string()
+    fn get_name(&self, path: PathBuf) -> String {
+        let file_name = path.file_name().unwrap();
+        file_name.to_str().unwrap().to_string()
     }
 }

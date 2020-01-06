@@ -1,6 +1,6 @@
-use serde_derive::{Deserialize};
+use serde_derive::Deserialize;
 
-#[derive(Debug,PartialEq,Deserialize)]
+#[derive(Debug, PartialEq, Deserialize)]
 pub struct MetaData {
     pub title: String,
     pub author: String,
@@ -18,7 +18,7 @@ impl MetaData {
             description: "".to_string(),
             year: "".to_string(),
             month: "".to_string(),
-            day: "".to_string()
+            day: "".to_string(),
         }
     }
 
@@ -26,6 +26,6 @@ impl MetaData {
         let end_metadata = contents[4..].find("---").unwrap() + 4;
         let metadata_content = &contents[..end_metadata];
 
-        serde_yaml::from_str( metadata_content ).unwrap()
+        serde_yaml::from_str(metadata_content).unwrap()
     }
 }
