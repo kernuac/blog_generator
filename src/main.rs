@@ -11,12 +11,13 @@ fn main() {
 
     for file in files {
         let file = file.unwrap();
-        let fln = file_walker::FilePost::new(file.path());
+        // let fln = file_walker::FilePost::new(file.path());
+        let fln = posts::Post::new(file.path());
 
         println!(
             "filename: {}\npath: {}\ncontents: {}\n",
-            fln.name,
-            fln.path.to_string_lossy(),
+            "fln.name",
+            "fln.path.to_string_lossy()",
             fln.contents
         );
     }

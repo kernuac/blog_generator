@@ -2,6 +2,7 @@ use crate::metadata;
 use comrak::{markdown_to_html, ComrakOptions};
 use std::fs::File;
 use std::io::Read;
+use std::path::PathBuf;
 
 pub struct Post {
     pub metadata: metadata::MetaData,
@@ -11,26 +12,28 @@ pub struct Post {
 }
 
 impl Post {
-    pub fn new(filename: String) -> Post {
+    pub fn new(filename: PathBuf) -> Post {
         let mut pst: Post = Post {
-            filename: "".to_string(),
+            filename: String::new(),
             metadata: metadata::MetaData::new(),
             url: "".to_string(),
             contents: "".to_string(),
         };
 
-        pst.filename = filename;
-        pst.contents = Post::read_file(pst.filename.clone());
+        pst.filename = filename.file_name().unwrap().to_str().unwrap().into();
+        pst.contents = Post::read_file(filename);
         pst.metadata = metadata::MetaData::retrieve(pst.contents.clone());
         pst.generate_url();
 
         pst
     }
 
-    pub fn read_file(filename: String) -> String {
-        let mut file_descriptor = File::open(filename).unwrap();
+    pub fn read_file(filename: PathBuf) -> String {
+        let mut file_descriptor = File::open(&filename).unwrap();
         let mut content = String::new();
         file_descriptor.read_to_string(&mut content).unwrap();
+        //let content2: Vec<&str> = content.splitn(2,"C").collect();
+        //content2[1].to_string()
         content
     }
 
