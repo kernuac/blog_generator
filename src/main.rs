@@ -1,24 +1,30 @@
+#![allow(dead_code)]
 const POSTS_FOLDER: &str = "__posts";
 
-pub mod file_walker;
-pub mod metadata;
-pub mod posts;
+pub mod file_reader;
+pub mod meta_data;
 
 use std::fs;
 
-fn main() {
-    let files = fs::read_dir(POSTS_FOLDER).unwrap();
+enum FileContent {
+    MetaData = 1,
+    Content = 2,
+}
 
-    for file in files {
-        let file = file.unwrap();
-        // let fln = file_walker::FilePost::new(file.path());
-        let fln = posts::Post::new(file.path());
+fn main() {
+    let filenames = fs::read_dir(POSTS_FOLDER).unwrap();
+
+    for filename in filenames {
+        let content = file_reader::read(filename.unwrap());
+        let file_content: Vec<&str> = content.split("---").collect();
+        let meta =
+            meta_data::Metadata::new(file_content[FileContent::MetaData as usize].to_string());
 
         println!(
             "filename: {}\npath: {}\ncontents: {}\n",
             "fln.name",
-            "fln.path.to_string_lossy()",
-            fln.contents
+            meta.title,
+            file_content[FileContent::Content as usize].trim()
         );
     }
 }
